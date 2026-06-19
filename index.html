@@ -1,10 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Hello</title>
-</head>
-<body>
-  <h1>Hello, World!</h1>
-</body>
-</html>
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>מדדי ESG ממוקדי-סקטור</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700&display=swap" rel="stylesheet"><style>
+:root{color-scheme:light;--bg:#f4f6f8;--card:#fff;--ink:#16202c;--muted:#5b6b7b;--line:#e4e9ee;--brand:#0f5e4e;--brand2:#1d9e75;--accent:#caa23a;--bad:#c0563a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Heebo','Segoe UI',Arial,sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:1060px;margin:0 auto;padding:18px 16px 36px}
+header .t{font-size:23px;font-weight:700;color:var(--brand)}
+header .s{font-size:13px;color:var(--muted);margin-top:2px}
+.sectors{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.sectors button{border:1px solid var(--line);background:var(--card);padding:8px 16px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer;color:var(--muted);transition:background .2s,color .2s;-webkit-tap-highlight-color:transparent}
+.sectors button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.headline{background:#eef6f2;border:1px solid #d7e8e0;color:#0f5e4e;border-radius:10px;padding:10px 14px;font-weight:600;font-size:14px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+.ph h2{font-size:16px;margin:0;font-weight:700}
+.hint{font-size:13px;color:var(--muted)}
+.ranking{position:relative;transition:height .4s}
+.rrow{position:absolute;inset-inline:0;display:flex;gap:10px;align-items:center;height:48px;transition:transform .55s cubic-bezier(.34,1.1,.4,1)}
+.rrow .rk{width:30px;height:30px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);flex:none}
+.rrow.first .rk{background:var(--accent);color:#3a2e08}
+.rmain{flex:1;min-width:0}
+.rtop{display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px}
+.cn{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.yr{color:var(--muted);font-weight:400;font-size:12px}
+.sc{font-weight:700;flex:none;margin-inline-start:8px}
+.track{height:14px;background:var(--line);border-radius:8px;overflow:hidden}
+.bar{height:100%;border-radius:8px;transition:width .55s ease,background .3s;width:0}
+.warn{color:var(--bad);cursor:help;font-size:12px}
+.srow{margin-bottom:13px}
+.slab{display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px}
+.slab .dir{color:var(--muted);font-style:normal;font-size:12px}
+input[type=range]{width:100%;accent-color:var(--brand2);height:28px;cursor:pointer}
+.reset{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:4px 12px;font:inherit;cursor:pointer;color:var(--muted);-webkit-tap-highlight-color:transparent}
+.ctoggle{display:flex;flex-wrap:wrap;gap:8px}
+.cchip{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.cchip.on{background:#eef6f2;border-color:#bcdccd}
+.cchip input{accent-color:var(--brand2);width:18px;height:18px}
+.heatwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.heat{border-collapse:collapse;width:100%;font-size:13px;text-align:center}
+table.heat th,table.heat td{border:1px solid var(--line);padding:7px 9px}
+table.heat th{background:#f3f6f8;font-weight:600;white-space:nowrap}
+table.heat th.cnm{text-align:right;white-space:nowrap}
+td.na{color:#aaa}
+td.tot{font-weight:700;background:#eef6f2}
+.method{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 18px;margin-top:16px}
+.method summary{cursor:pointer;font-weight:700;padding:9px 0;-webkit-tap-highlight-color:transparent}
+.method ul{margin:4px 0 12px;padding-inline-start:20px}
+.method li{font-size:13px;color:#3c4a57;margin-bottom:6px}
+footer{color:var(--muted);font-size:12px;margin-top:18px;text-align:center}
+@media(max-width:760px){
+  .grid{grid-template-columns:1fr}
+  .wrap{padding:12px 10px 28px}
+  header .t{font-size:19px}
+  header .s{font-size:11px}
+  .sectors{gap:6px;margin:10px 0}
+  .sectors button{padding:7px 12px;font-size:13px}
+  .headline{font-size:13px;padding:8px 12px}
+  .panel{padding:12px 12px}
+  .ph h2{font-size:14px}
+  .rrow{height:52px}
+  .rrow .rk{width:26px;height:26px;font-size:13px}
+  .rtop{font-size:13px}
+  .sc{font-size:14px}
+  .track{height:12px}
+  .slab{font-size:13px}
+  .slab .dir{font-size:11px}
+  .ctoggle{gap:6px}
+  .cchip{padding:5px 10px;font-size:12px}
+  table.heat{font-size:11px}
+  table.heat th,table.heat td{padding:5px 6px}
+  .method li{font-size:12px}
+  footer{font-size:11px}
+}
+@media(max-width:400px){
+  .sectors button{padding:6px 10px;font-size:12px}
+  header .t{font-size:17px}
+  .rrow .rk{width:24px;height:24px;font-size:12px}
+  .rtop{font-size:12px}
+  .cn .yr{display:none}
+}
+</style></head><body>
+<div class="wrap">
+<header><div class="t">מדדי ESG ממוקדי-סקטור</div><div class="s">דירוג חברות וניתוח רגישות אינטראקטיבי · מכון אריסון ל-ESG, אוניברסיטת רייכמן · בשיתוף EY</div></header>
+<div class="sectors" id="sectorTabs"></div>
+<div class="headline" id="headline"></div>
+<div class="grid">
+<section class="panel"><div class="ph"><h2>דירוג חברות</h2><span class="hint" id="leaderHint"></span></div><div class="ranking" id="ranking"></div></section>
+<aside class="panel"><div class="ph"><h2>משקלי המדדים</h2><button class="reset" id="resetBtn">איפוס לשווה</button></div><div id="sliders"></div><div class="ph" style="margin-top:16px"><h2>חברות במדגם</h2></div><div id="compToggle" class="ctoggle"></div></aside>
+</div>
+<section class="panel" style="margin-top:16px"><div class="ph"><h2>מטריצת ציונים מנורמלים (0–100)</h2></div><div class="heatwrap"><table class="heat" id="heatmap"></table></div></section>
+<details class="method"><summary>מתודולוגיה והסתייגויות</summary><div id="method"></div></details>
+<footer id="foot"></footer>
+</div>
+<script>
+const DATA={"meta":{"title":"מדדי ESG ממוקדי-סקטור","subtitle":"דירוג חברות וניתוח רגישות אינטראקטיבי","org":"מכון אריסון ל-ESG, אוניברסיטת רייכמן","collaboration":"בשיתוף מחלקת ה-ESG של EY","lastUpdated":"2026-06-18","method":{"normalization":"נרמול min-max ל-0–100 לכל מדד, יחסית לחברות שבמדגם. מדד שכיוונו 'נמוך=טוב' מנורמל הפוך כך שהביצוע הטוב מקבל 100.","scoring":"ציון משוקלל = ממוצע משוקלל של הציונים המנורמלים לפי המשקלים שנבחרו. לחברה עם נתון חסר, המשקלים מנורמלים מחדש על המדדים הזמינים לה בלבד.","sensitivity":"שינוי משקל של מדד מעדכן את הציונים והדירוג בזמן אמת. הדירוג יחסי למדגם- הוספה/הסרה של חברה משנה את הנרמול."}},"sectors":[{"id":"realestate","name":"נדל\"ן מניב","owner":"רגב","headline":"עזריאלי מוביל ברוב התרחישים; כשמשקל עצימות הפליטות עובר ~64%, ביג עוקפת אותו.","companies":[{"id":"azrieli","name":"עזריאלי","year":"2024"},{"id":"amot","name":"אמות","year":"2023"},{"id":"melisron","name":"מליסרון","year":"2022"},{"id":"big","name":"ביג","year":"2024"}],"kpis":[{"id":"emissions_intensity","name":"עצימות פליטות (tCO2e/מ\"ר)","short":"עצימות פליטות","unit":"tCO2e/מ\"ר","direction":"lower","description":"פליטות Scope 1+2 חלקי שטח מניב מנוהל. נמוך=טוב.","values":{"azrieli":0.097,"amot":0.075,"melisron":0.17,"big":0.01}},{"id":"green_cert","name":"תקן ירוק (מס' נכסים מוסמכים)","short":"תקן ירוק","unit":"מס' נכסים","direction":"higher","description":"מספר נכסים שהושלמה להם הסמכה ירוקה בפועל (LEED / ת\"י 5281 / BREEAM). גבוה=טוב.","values":{"azrieli":22,"amot":6,"melisron":0,"big":1}}],"notes":["שנות דיווח שונות: עזריאלי 2024, אמות 2023, מליסרון 2022, ביג 2024. ההשוואה חוצה שנים.","מליסרון 2022- שנת התאוששות מקורונה (קניונים סגורים), מה שמעלה את הפליטות שלה.","שיטת Scope 2 לא אחידה: ביג מדווחת market-based (תעודות REC וסולארי הורידו לה 52%), עזריאלי ומליסרון לפי מקדם הרשת הארצית (location-based).","ביג היחידה עם נתונים גלובליים (ישראל+אירופה+ארה\"ב); השאר ישראל בלבד- פליטותיה מדוללות על שטח עולמי.","ביג לא פרסמה Scope 2 location-based ל-2024; לפי 2023 העצימות הפיזית קרובה ל-0.02 ולא 0.010.","מכנה העצימות של אמות = 41 מבנים נמדדים (77% מהפורטפוליו); על כל הפורטפוליו עצימותה כ-0.058.","עצימות עזריאלי ומליסרון מדווחת בדוח; של אמות וביג חושבה (Scope 1+2 חלקי שטח).","מספר נכסים מוסמכים = הסמכות שהושלמו בפועל בלבד (לא 'בתהליך'); מוטה לטובת פורטפוליו גדול (14 LEED O&M של עזריאלי). אומת מול USGBC.","הנרמול יחסי ל-4 החברות במדגם; ישתנה אם מוסיפים/מורידים חברה.","מקור מלא לכל נתון (דוח+עמוד): 'מקורות ואימות - KPI נדלן מניב'."]},{"id":"banks","name":"בנקים","owner":"לירי","headline":"לאומי מוביל ברוב התרחישים; מזרחי טפחות מזנק כשמשקל סיכון המעבר עולה.","companies":[{"id":"leumi","name":"לאומי","year":"2025"},{"id":"poalim","name":"הפועלים","year":"2025"},{"id":"discount","name":"דיסקונט","year":"2024"},{"id":"mizrahi","name":"מזרחי טפחות","year":"2025"},{"id":"benleumi","name":"הבינלאומי","year":"2025"}],"kpis":[{"id":"green_credit_change","name":"שינוי בתיק האשראי הירוק (%)","short":"צמיחת אשראי ירוק","unit":"%","direction":"higher","description":"שיעור השינוי בתיק האשראי הירוק לעומת השנה הקודמת. גבוה=טוב.","values":{"leumi":99.26,"poalim":-5.7,"discount":5.68,"mizrahi":30.0,"benleumi":31.8}},{"id":"transition_risk","name":"חשיפה לענפים בסיכון מעבר גבוה (%)","short":"סיכון מעבר","unit":"%","direction":"lower","description":"אחוז התיק המושקע בענפים בסיכון מעבר אקלימי גבוה. נמוך=טוב.","source_note":"כיוון תוקן לנמוך=טוב; בגיליון המקור חושב הפוך (גבוה=טוב).","values":{"leumi":4.87,"poalim":5.73,"discount":5.76,"mizrahi":4.12,"benleumi":4.5}},{"id":"sme_intensity","name":"עצימות הכנסות ממגזר SME","short":"עצימות SME","unit":"יחס","direction":"lower","description":"הכנסות מ-SME חלקי שיעור האשראי ל-SME. נמוך=טוב (תנאים נוחים יחסית לעסקים קטנים).","values":{"leumi":1.7022,"poalim":2.6935,"discount":1.894,"mizrahi":3.2074,"benleumi":1.9843}}],"notes":["כיוון מדד 'סיכון מעבר גבוה' תוקן כאן לנמוך=טוב (סיכון נמוך עדיף); בגיליון המקור הוא נורמל הפוך ולכן מזרחי קיבל 0 במקום 100.","'עצימות הכנסות ממגזר SME' = הכנסות מ-SME חלקי האשראי ל-SME; פירוש 'נמוך=טוב' הוא בחירה מתודולוגית של צוות הבנקים.","שנים: לאומי/הפועלים/מזרחי/הבינלאומי 2025, דיסקונט 2024.","סקטור באחריות צוות הבנקים (לירי)- מובא כאן להדגמה והשוואה."]},{"id":"chemistry","name":"כימיה ופארמה","owner":"לירון","headline":"סנו מוביל בעקביות; טבע עם נתונים חלקיים (מדד אחד בלבד)- יש לפרש בזהירות.","companies":[{"id":"icl","name":"ICL","year":"2023"},{"id":"bazan","name":"בז\"ן","year":"2024"},{"id":"teva","name":"טבע","year":"2025","partial":true},{"id":"adama","name":"אדמה","year":"2024"},{"id":"sano","name":"סנו","year":"2023"}],"kpis":[{"id":"waste_diversion","name":"שיעור הסטייה מהטמנה (%)","short":"הסטייה מהטמנה","unit":"%","direction":"higher","description":"שיעור הפסולת שמוחזרה/שומשה מחדש מסך הפסולת. גבוה=טוב.","values":{"icl":41.44,"bazan":68.08,"teva":null,"adama":58.22,"sano":60.75}},{"id":"hazwaste_rev","name":"פסולת מסוכנת / הכנסות","short":"פסולת מסוכנת/הכנסות","unit":"טון/מ' $","direction":"lower","description":"טון פסולת מסוכנת חלקי הכנסות (מ' דולר). נמוך=טוב.","source_note":"אדמה ערך חריג (35 מול 1–4) שמכווץ את שאר החברות סביב 100.","values":{"icl":3.1714,"bazan":0.7807,"teva":3.6994,"adama":35.0647,"sano":1.5739}},{"id":"energy_rev","name":"אנרגיה / הכנסות","short":"אנרגיה/הכנסות","unit":"TJ/מ' $","direction":"lower","description":"שימוש אנרגיה (TJ) חלקי הכנסות. נמוך=טוב.","source_note":"סומן בגיליון המקור 'לשנות לפליטות'- כרגע אנרגיה.","values":{"icl":4.8301,"bazan":9.1859,"teva":null,"adama":2.5284,"sano":0.2858}}],"notes":["הכותרות והנרמול בגיליון המקור הועתקו בטעות מסקטור הבנקים; הנתונים נורמלו כאן מחדש מהערכים הגולמיים.","טבע: נתונים חלקיים (רק פסולת מסוכנת/הכנסות); שאר המדדים חסרים. ציונה מבוסס מדד יחיד- לפרש בזהירות או להסיר מהמדגם.","אדמה: ערך חריג בפסולת מסוכנת/הכנסות (35 מול 1–4) שמכווץ את שאר החברות סביב 100.","מדד הבטיחות (LTIR/TRIR) לא נכלל: מדדים שונים בין החברות, לא בני השוואה.","שנים: ICL 2023, בז\"ן 2024, טבע 2025, אדמה 2024, סנו 2023.","סקטור באחריות צוות הכימיה (לירון)- מובא כאן להדגמה והשוואה."]}]};
+let SID=DATA.sectors[0].id,W={},ACTIVE=new Set();
+const $=s=>document.querySelector(s);
+const sec=()=>DATA.sectors.find(s=>s.id===SID);
+const comps=()=>sec().companies.filter(c=>ACTIVE.has(c.id));
+function initSector(id){SID=id;const s=sec();W={};s.kpis.forEach(k=>W[k.id]=Math.round(100/s.kpis.length));ACTIVE=new Set(s.companies.map(c=>c.id));renderAll();}
+function normMatrix(){const s=sec(),cs=comps(),m={};s.kpis.forEach(k=>{const vals=cs.map(c=>k.values[c.id]).filter(v=>v!=null);const mn=Math.min(...vals),mx=Math.max(...vals);m[k.id]={};cs.forEach(c=>{const v=k.values[c.id];if(v==null){m[k.id][c.id]=null;return}let n;if(mx===mn)n=50;else n=k.direction==='higher'?(v-mn)/(mx-mn)*100:(mx-v)/(mx-mn)*100;m[k.id][c.id]=n;});});return m;}
+function scoreRows(){const s=sec(),m=normMatrix();const tw=s.kpis.reduce((a,k)=>a+W[k.id],0);const eW={};s.kpis.forEach(k=>eW[k.id]=tw===0?1:W[k.id]);const rows=comps().map(c=>{let num=0,den=0,cov=0;s.kpis.forEach(k=>{const n=m[k.id][c.id];if(n!=null){num+=eW[k.id]*n;den+=eW[k.id];cov++;}});return{id:c.id,name:c.name,year:c.year,partial:!!c.partial||cov<s.kpis.length,cov,tot:s.kpis.length,score:den?num/den:0};});rows.sort((a,b)=>b.score-a.score);rows.forEach((r,i)=>r.rank=i+1);return{rows,m};}
+function barColor(score,rank){if(rank===1)return '#0f5e4e';return 'hsl(162,'+Math.round(34+score*0.22)+'%,'+Math.round(60-score*0.26)+'%)';}
+function heatBg(v){return 'hsl(150,55%,'+Math.round(95-v*0.42)+'%)';}
+function renderTabs(){$('#sectorTabs').innerHTML=DATA.sectors.map(s=>'<button class="'+(s.id===SID?'on':'')+'" data-s="'+s.id+'">'+s.name+'</button>').join('');$('#sectorTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>initSector(b.dataset.s));}
+function renderSliders(){const s=sec();$('#sliders').innerHTML=s.kpis.map(k=>{const dir=k.direction==='higher'?'גבוה=טוב':'נמוך=טוב';return '<div class="srow"><div class="slab"><span>'+k.short+' <i class="dir">('+dir+')</i></span><b id="wv_'+k.id+'">0%</b></div><input type="range" min="0" max="100" step="1" value="'+W[k.id]+'" data-k="'+k.id+'"></div>';}).join('');$('#sliders').querySelectorAll('input').forEach(inp=>inp.oninput=e=>{W[e.target.dataset.k]=+e.target.value;update();});}
+function renderToggle(){const s=sec();$('#compToggle').innerHTML=s.companies.map(c=>{const on=ACTIVE.has(c.id);return '<label class="cchip '+(on?'on':'')+'"><input type="checkbox" '+(on?'checked':'')+' data-c="'+c.id+'"><span>'+c.name+(c.partial?' <i class="dir">(חלקי)</i>':'')+'</span></label>';}).join('');$('#compToggle').querySelectorAll('input').forEach(inp=>inp.onchange=e=>{const id=e.target.dataset.c;if(e.target.checked)ACTIVE.add(id);else{if(ACTIVE.size<=2){e.target.checked=true;return;}ACTIVE.delete(id);}renderToggle();update();});}
+function renderRanking(rows){const box=$('#ranking'),rowH=54;box.style.height=(rows.length*rowH)+'px';const mx=Math.max(...rows.map(r=>r.score),1);rows.forEach(r=>{let el=box.querySelector('[data-c="'+r.id+'"]');if(!el){el=document.createElement('div');el.className='rrow';el.dataset.c=r.id;el.innerHTML='<div class="rk"></div><div class="rmain"><div class="rtop"><span class="cn"></span><span class="sc"></span></div><div class="track"><div class="bar"></div></div></div>';box.appendChild(el);}el.style.transform='translateY('+((r.rank-1)*rowH)+'px)';el.classList.toggle('first',r.rank===1);el.querySelector('.rk').textContent=r.rank;const cn=el.querySelector('.cn');cn.innerHTML=r.name+' <span class="yr">'+r.year+'</span>';if(r.partial){const w=document.createElement('span');w.className='warn';w.textContent=' ⚠';w.title='נתונים חלקיים: '+r.cov+'/'+r.tot+' מדדים';cn.appendChild(w);}el.querySelector('.sc').textContent=Math.round(r.score);const bar=el.querySelector('.bar');bar.style.width=(r.score/mx*100)+'%';bar.style.background=barColor(r.score,r.rank);});Array.from(box.children).forEach(el=>{if(!rows.find(r=>r.id===el.dataset.c))el.remove();});}
+function renderHeat(rows,m){const s=sec();const head='<tr><th class="cnm">חברה</th>'+s.kpis.map(k=>'<th>'+k.short+'</th>').join('')+'<th>ציון</th></tr>';const body=rows.map(r=>{const tds=s.kpis.map(k=>{const v=m[k.id][r.id];return v==null?'<td class="na">—</td>':'<td style="background:'+heatBg(v)+'">'+Math.round(v)+'</td>';}).join('');return '<tr><th class="cnm">'+r.name+(r.partial?' ⚠':'')+'</th>'+tds+'<td class="tot">'+Math.round(r.score)+'</td></tr>';}).join('');$('#heatmap').innerHTML=head+body;}
+function renderMethod(){const s=sec(),mm=DATA.meta.method;$('#method').innerHTML='<p style="font-size:13px;color:#3c4a57"><b>נרמול:</b> '+mm.normalization+'</p><p style="font-size:13px;color:#3c4a57"><b>שקלול:</b> '+mm.scoring+'</p><p style="font-size:13px;color:#3c4a57"><b>רגישות:</b> '+mm.sensitivity+'</p><h3 style="font-size:14px;margin:10px 0 4px">הערות לסקטור '+s.name+':</h3><ul>'+s.notes.map(n=>'<li>'+n+'</li>').join('')+'</ul>';}
+function update(){const {rows,m}=scoreRows();renderRanking(rows);renderHeat(rows,m);$('#headline').textContent=sec().headline;$('#leaderHint').textContent=rows[0]?('מוביל/ה: '+rows[0].name):'';const s=sec();const sw=s.kpis.reduce((a,k)=>a+W[k.id],0)||1;s.kpis.forEach(k=>{const el=document.getElementById('wv_'+k.id);if(el)el.textContent=Math.round(W[k.id]/sw*100)+'%';});}
+function renderAll(){renderTabs();renderSliders();renderToggle();renderMethod();$('#foot').innerHTML='מקור: '+DATA.meta.org+' · עודכן '+DATA.meta.lastUpdated+' · נתונים מדוחות ESG וכספיים של החברות';$('#resetBtn').onclick=()=>{const s=sec();s.kpis.forEach(k=>W[k.id]=Math.round(100/s.kpis.length));renderSliders();update();};update();}
+initSector(DATA.sectors[0].id);
+</script></body></html>
