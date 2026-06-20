@@ -1,6 +1,14 @@
 {
-  "updatedAt": "2026-06-20T11:47:06.975Z",
+  "updatedAt": "2026-06-20T11:53:46.362Z",
   "timezone": "Asia/Jerusalem",
   "days": 7,
-  "events": []
+  "events": [
+    {
+      "id": "7t1c7pvttr7iccfg876hcaiqm4",
+      "title": "מחר גליה בקורס לחיילים משוחררים",
+      "start": "2026-06-21T09:00:00+03:00",
+      "end": "2026-06-21T09:30:00+03:00",
+      "isAllDay": false
+    }
+  ]
 }
