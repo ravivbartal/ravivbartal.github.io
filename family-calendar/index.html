@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a5f4a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>לוח המשפחה</title>
+  <style>
+    :root {
+      --bg: #f4f7f5;
+      --surface: #ffffff;
+      --text: #1f2933;
+      --muted: #667885;
+      --accent: #1a5f4a;
+      --accent-soft: #e8f3ee;
+      --today: #fff4df;
+      --today-border: #f0b429;
+      --shadow: 0 8px 24px rgba(26, 95, 74, 0.08);
+      --radius: 16px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #e8f3ee 0%, var(--bg) 220px, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 16px 16px calc(24px + var(--safe-bottom));
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: rgba(244, 247, 245, 0.88);
+      padding: 12px 0 16px;
+      margin-bottom: 8px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    button {
+      border: none;
+      background: var(--accent);
+      color: white;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }
+
+    .state.error { color: #b42318; }
+
+    .day-section { margin-bottom: 18px; }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .day-header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .day-header span {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .today-badge {
+      display: inline-block;
+      background: var(--today-border);
+      color: #5c3d00;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-inline-start: 8px;
+      vertical-align: middle;
+    }
+
+    .events { display: grid; gap: 10px; }
+
+    .event-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .day-section.today .event-card {
+      background: linear-gradient(180deg, #fffdf8 0%, var(--surface) 100%);
+      border: 1px solid rgba(240, 180, 41, 0.35);
+    }
+
+    .event-time {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.35;
+      white-space: nowrap;
+    }
+
+    .event-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .event-desc {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .empty-day {
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px dashed #cfd8d3;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 24px;
+    }
+
+    .stale-warning {
+      display: none;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #b45309;
+      background: #fef3c7;
+      padding: 6px 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stale-warning.visible { display: block; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title-row">
+        <div>
+          <h1>לוח המשפחה</h1>
+          <p class="subtitle" id="range-label">טוען...</p>
+        </div>
+        <button id="refresh-btn" type="button" aria-label="רענון">↻</button>
+      </div>
+    </header>
+
+    <div class="stale-warning" id="stale-warning">הנתונים ישנים — ייתכן שהם לא מעודכנים</div>
+
+    <main id="content">
+      <div class="state">טוען את לוח הזמנים...</div>
+    </main>
+
+    <p class="footer-note" id="updated-at"></p>
+  </div>
+
+  <script>
+    const content = document.getElementById('content');
+    const rangeLabel = document.getElementById('range-label');
+    const updatedAt = document.getElementById('updated-at');
+    const refreshBtn = document.getElementById('refresh-btn');
+    const staleWarning = document.getElementById('stale-warning');
+
+    const dayFormatter = new Intl.DateTimeFormat('he-IL', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
+
+    const shortDayFormatter = new Intl.DateTimeFormat('he-IL', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+    });
+
+    const timeFormatter = new Intl.DateTimeFormat('he-IL', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+
+    function isSameDay(a, b) {
+      return a.getFullYear() === b.getFullYear()
+        && a.getMonth() === b.getMonth()
+        && a.getDate() === b.getDate();
+    }
+
+    function startOfDay(date) {
+      const copy = new Date(date);
+      copy.setHours(0, 0, 0, 0);
+      return copy;
+    }
+
+    function addDays(date, days) {
+      const copy = new Date(date);
+      copy.setDate(copy.getDate() + days);
+      return copy;
+    }
+
+    function formatEventTime(event) {
+      if (event.isAllDay) return 'כל היום';
+
+      const start = new Date(event.start);
+      const end = new Date(event.end);
+      const startText = timeFormatter.format(start);
+      const endText = timeFormatter.format(end);
+
+      return endText !== startText ? startText + '<br>' + endText : startText;
+    }
+
+    function groupEventsByDay(events, days) {
+      const today = startOfDay(new Date());
+      const groups = [];
+
+      for (let i = 0; i < days; i += 1) {
+        const day = addDays(today, i);
+        const dayEvents = events
+          .filter((event) => isSameDay(new Date(event.start), day))
+          .sort((a, b) => new Date(a.start) - new Date(b.start));
+        groups.push({ day, isToday: i === 0, events: dayEvents });
+      }
+
+      return groups;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderSchedule(data) {
+      const groups = groupEventsByDay(data.events, data.days);
+      const today = groups[0].day;
+      const lastDay = groups[groups.length - 1].day;
+
+      rangeLabel.textContent = shortDayFormatter.format(today) + ' – ' + shortDayFormatter.format(lastDay);
+
+      if (data.events.length === 0) {
+        content.innerHTML = '<div class="state">אין אירועים בימים הקרובים</div>';
+        return;
+      }
+
+      content.innerHTML = groups.map((group) => {
+        const dayClass = group.isToday ? 'day-section today' : 'day-section';
+        const todayBadge = group.isToday ? '<span class="today-badge">היום</span>' : '';
+        const eventsHtml = group.events.length
+          ? group.events.map((event) => `
+              <article class="event-card">
+                <div class="event-time">${formatEventTime(event)}</div>
+                <div>
+                  <h3 class="event-title">${escapeHtml(event.title)}</h3>
+                  ${event.description ? `<p class="event-desc">${escapeHtml(event.description)}</p>` : ''}
+                </div>
+              </article>
+            `).join('')
+          : '<div class="empty-day">אין אירועים</div>';
+
+        return `
+          <section class="${dayClass}">
+            <div class="day-header">
+              <h2>${dayFormatter.format(group.day)}${todayBadge}</h2>
+              <span>${group.events.length} אירועים</span>
+            </div>
+            <div class="events">${eventsHtml}</div>
+          </section>
+        `;
+      }).join('');
+    }
+
+    function checkStale(updatedAtStr) {
+      const diff = Date.now() - new Date(updatedAtStr).getTime();
+      const TWO_HOURS = 2 * 60 * 60 * 1000;
+      if (diff > TWO_HOURS) {
+        staleWarning.classList.add('visible');
+      } else {
+        staleWarning.classList.remove('visible');
+      }
+    }
+
+    async function loadSchedule() {
+      refreshBtn.disabled = true;
+      content.innerHTML = '<div class="state">טוען את לוח הזמנים...</div>';
+
+      try {
+        const response = await fetch('./events.json?' + Date.now(), { cache: 'no-store' });
+
+        if (!response.ok) {
+          throw new Error('טעינה נכשלה (' + response.status + ')');
+        }
+
+        const data = await response.json();
+        renderSchedule(data);
+
+        if (data.updatedAt) {
+          updatedAt.textContent = 'עודכן: ' + new Intl.DateTimeFormat('he-IL', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+          }).format(new Date(data.updatedAt));
+          checkStale(data.updatedAt);
+        }
+      } catch (error) {
+        content.innerHTML = '<div class="state error">' + escapeHtml(error.message) + '</div>';
+        updatedAt.textContent = '';
+      } finally {
+        refreshBtn.disabled = false;
+      }
+    }
+
+    refreshBtn.addEventListener('click', loadSchedule);
+    loadSchedule();
+  </script>
+</body>
+</html>
