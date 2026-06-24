@@ -339,8 +339,8 @@
 
     function checkStale(updatedAtStr) {
       const diff = Date.now() - new Date(updatedAtStr).getTime();
-      const TWO_HOURS = 2 * 60 * 60 * 1000;
-      if (diff > TWO_HOURS) {
+      const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+      if (diff > TWELVE_HOURS) {
         staleWarning.classList.add('visible');
       } else {
         staleWarning.classList.remove('visible');
