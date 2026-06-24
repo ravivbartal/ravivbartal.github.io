@@ -1,0 +1,7 @@
+{
+  "name": "ravivbartal-github-io",
+  "private": true,
+  "dependencies": {
+    "googleapis": "^118.0.0"
+  }
+}

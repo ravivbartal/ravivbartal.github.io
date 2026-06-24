@@ -1,0 +1,45 @@
+name: Sync Family Calendar
+
+on:
+  schedule:
+    - cron: '0 9 * * *'   # 12:00 Israel time (UTC+3)
+    - cron: '0 19 * * *'  # 22:00 Israel time (UTC+3)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch calendar events
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+          DAYS_AHEAD: '7'
+          TIMEZONE: 'Asia/Jerusalem'
+        run: node scripts/sync-events.js
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add family-calendar/events.json
+          if git diff --cached --quiet; then
+            echo "No changes to events.json"
+          else
+            git commit -m "Update calendar events [$(date -u +%Y-%m-%dT%H:%M:%SZ)]"
+            git push
+          fi
