@@ -17,6 +17,19 @@ const path = require('path');
 
 const REQUIRED_ENV = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REFRESH_TOKEN', 'GOOGLE_CALENDAR_ID'];
 
+async function withRetry(fn, { retries = 3, delayMs = 2000 } = {}) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      const isTransient = /premature close|ECONNRESET|socket hang up|ETIMEDOUT/i.test(err.message);
+      if (!isTransient || attempt === retries) throw err;
+      console.warn(`Attempt ${attempt} failed (${err.message}), retrying in ${delayMs}ms...`);
+      await new Promise((r) => setTimeout(r, delayMs * attempt));
+    }
+  }
+}
+
 async function main() {
   for (const key of REQUIRED_ENV) {
     if (!process.env[key]) {
@@ -35,6 +48,8 @@ async function main() {
   const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, 'http://localhost');
   oauth2Client.setCredentials({ refresh_token: refreshToken });
 
+  await withRetry(() => oauth2Client.getAccessToken());
+
   const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
   const now = new Date();
@@ -47,14 +62,14 @@ async function main() {
 
   console.log(`Fetching events from ${timeMin.toISOString()} to ${timeMax.toISOString()}`);
 
-  const response = await calendar.events.list({
+  const response = await withRetry(() => calendar.events.list({
     calendarId,
     timeMin: timeMin.toISOString(),
     timeMax: timeMax.toISOString(),
     singleEvents: true,
     orderBy: 'startTime',
     timeZone: timezone,
-  });
+  }));
 
   const items = response.data.items || [];
 
