@@ -11,23 +11,47 @@
  *   OUTPUT_PATH (default: ./family-calendar/events.json)
  */
 
-const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
 
 const REQUIRED_ENV = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REFRESH_TOKEN', 'GOOGLE_CALENDAR_ID'];
 
-async function withRetry(fn, { retries = 3, delayMs = 2000 } = {}) {
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      return await fn();
-    } catch (err) {
-      const isTransient = /premature close|ECONNRESET|socket hang up|ETIMEDOUT/i.test(err.message);
-      if (!isTransient || attempt === retries) throw err;
-      console.warn(`Attempt ${attempt} failed (${err.message}), retrying in ${delayMs}ms...`);
-      await new Promise((r) => setTimeout(r, delayMs * attempt));
-    }
+async function refreshAccessToken(clientId, clientSecret, refreshToken) {
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: 'refresh_token',
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Token refresh failed (${res.status}): ${body}`);
   }
+  const data = await res.json();
+  return data.access_token;
+}
+
+async function fetchCalendarEvents(accessToken, calendarId, timeMin, timeMax, timezone) {
+  const params = new URLSearchParams({
+    timeMin: timeMin.toISOString(),
+    timeMax: timeMax.toISOString(),
+    singleEvents: 'true',
+    orderBy: 'startTime',
+    timeZone: timezone,
+  });
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?${params}`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Calendar API failed (${res.status}): ${body}`);
+  }
+  return res.json();
 }
 
 async function main() {
@@ -45,12 +69,9 @@ async function main() {
   const daysAhead = parseInt(process.env.DAYS_AHEAD || '7', 10);
   const timezone = process.env.TIMEZONE || 'Asia/Jerusalem';
 
-  const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, 'http://localhost');
-  oauth2Client.setCredentials({ refresh_token: refreshToken });
-
-  await withRetry(() => oauth2Client.getAccessToken());
-
-  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+  console.log('Refreshing access token...');
+  const accessToken = await refreshAccessToken(clientId, clientSecret, refreshToken);
+  console.log('Token refreshed successfully');
 
   const now = new Date();
   const timeMin = new Date(now);
@@ -62,16 +83,9 @@ async function main() {
 
   console.log(`Fetching events from ${timeMin.toISOString()} to ${timeMax.toISOString()}`);
 
-  const response = await withRetry(() => calendar.events.list({
-    calendarId,
-    timeMin: timeMin.toISOString(),
-    timeMax: timeMax.toISOString(),
-    singleEvents: true,
-    orderBy: 'startTime',
-    timeZone: timezone,
-  }));
+  const data = await fetchCalendarEvents(accessToken, calendarId, timeMin, timeMax, timezone);
 
-  const items = response.data.items || [];
+  const items = data.items || [];
 
   const events = items.map((item) => {
     const isAllDay = !!item.start.date;
