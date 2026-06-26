@@ -90,7 +90,6 @@ async function main() {
   const events = items.map((item) => {
     const isAllDay = !!item.start.date;
     return {
-      id: item.id,
       title: item.summary || 'ללא כותרת',
       start: isAllDay ? item.start.date : item.start.dateTime,
       end: isAllDay ? item.end.date : item.end.dateTime,
