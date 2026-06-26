@@ -1,15 +1,8 @@
 {
-  "updatedAt": "2026-06-24T02:33:06.801Z",
+  "updatedAt": "2026-06-26T07:29:05.321Z",
   "timezone": "Asia/Jerusalem",
   "days": 7,
   "events": [
-    {
-      "id": "78t18ab0pm1hh8pf88hqa7o188",
-      "title": "להסיר חלונות כהים לקראת טסט שישי 12",
-      "start": "2026-06-25",
-      "end": "2026-06-25",
-      "isAllDay": true
-    },
     {
       "id": "uaqm3bahsmf93qnk9u3bvjp4rk",
       "title": "להסיר חלונות כהים לקראת טסט שישי",
